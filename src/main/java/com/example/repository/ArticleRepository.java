@@ -51,17 +51,19 @@ public class ArticleRepository {
 				articleList.add(article);
 			}
 
-			Comment comment = new Comment();
-			comment.setId(rs.getInt("comments_id"));
-			comment.setName(rs.getString("comments_name"));
-			comment.setContent(rs.getString("comments_content"));
+			if (rs.getString("comments_name") != null) {
 
-			commentList.add(comment);
+				Comment comment = new Comment();
+				comment.setId(rs.getInt("comments_id"));
+				comment.setName(rs.getString("comments_name"));
+				comment.setContent(rs.getString("comments_content"));
+				comment.setArticleId(rs.getInt("comments_article_id"));
+				commentList.add(comment);
+			}
 
 			beforeId = nowId;
 		}
 
-		articleList.add(article);
 		return articleList;
 	};
 
@@ -71,7 +73,7 @@ public class ArticleRepository {
 	 * @return 全記事のドメインがIDの降順（新しい順）に入ったリスト ※コメントリストはIDの昇順（古い順）
 	 */
 	public List<Article> findAll() {
-		String sql = "SELECT a.id AS articles_id, a.name AS articles_name, a.content AS articles_content, c.id AS comments_id, c.name AS comments_name, c.content AS comments_content"
+		String sql = "SELECT a.id AS articles_id, a.name AS articles_name, a.content AS articles_content, c.id AS comments_id, c.name AS comments_name, c.content AS comments_content, c.article_id AS comments_article_id"
 				+ " FROM " + TABLE_ARTICLES + " a LEFT OUTER JOIN " + TABLE_COMMENTS
 				+ " c ON a.id=c.article_id ORDER BY a.id DESC, c.id ASC;";
 		List<Article> articleList = template.query(sql, ARTICLE_ROW_MAPPER);

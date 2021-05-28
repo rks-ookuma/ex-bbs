@@ -28,9 +28,9 @@
             <a href="board.html" th:action="@{/article/deleteArticle}+'?id='+${article.id}">記事削除</a>
         </div>
         
-        <div th:each="comment : ${article.commentList}" style="color: green;">
-            <span th:if="${comment.name}" th:text="コメント者名：">コメント者名：</span><span th:text="${comment.name}">吉田１</span><br>
-            <span th:if="${comment.content}" th:text="コメント内容：">コメント内容：</span>
+        <div th:each="comment : ${article.commentList}" th:if="${comment}" style="color: green;">
+            <span>コメント者名：</span><span th:text="${comment.name}">吉田１</span><br>
+            <span>コメント内容：</span>
             <pre th:text="${comment.content}">
                 山田さんの書き込みコメント１
             </pre>
