@@ -38,14 +38,25 @@
         </div>
 
         <form action="board.html" th:action="@{/article/insertComment}" th:object="${commentInsertForm}">
+            
             <input type="hidden" name="articleId" th:value="${article.id}">
+
             <div th:if="${article.id==commentInsertForm.articleId}" th:errors="*{name}" style="color: red;">エラー！</div>
             <label for="commentNameField">名前：</label><br>
+            <span th:if="${article.id==commentInsertForm.articleId}"><input type="text" name="name" id="commentNameField" th:field="*{name}"><br></span>
+            <span th:unless="${article.id==commentInsertForm.articleId}"><input type="text" name="name" id="commentNameFiel"><br></span>
+            
             <div th:if="${article.id==commentInsertForm.articleId}" th:errors="*{content}" style="color: red">エラー！</div>
-            <input type="text" name="name" id="commentNameField" th:field="*{name}"><br>
             <label for="commentContentField">コメント：</label><br>
-            <textarea name="content" id="commentContentField" cols="30" rows="10"></textarea><br>
+            <span   th:if="${article.id==commentInsertForm.articleId}" >
+            <textarea  name="content" id="commentContentField" cols="30" rows="10" th:field="*{content}"></textarea><br>
+            </span>
+            <span   th:unless="${article.id==commentInsertForm.articleId}">
+            <textarea  name="content" id="commentContentFiel" cols="30" rows="10"></textarea><br>
+            </span>
+            
             <button>コメント投稿</button>
+        
         </form>
 
     </div>

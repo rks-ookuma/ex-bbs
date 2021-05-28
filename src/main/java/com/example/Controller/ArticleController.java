@@ -109,7 +109,6 @@ public class ArticleController {
 	 */
 	@RequestMapping("/deleteArticle")
 	public String deleteArticle(int id) {
-		System.out.println(id);
 		articleRepository.deleteById(id);
 		return "redirect:/article";
 	}
