@@ -2,6 +2,7 @@ package com.example.Controller;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,9 +11,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.domain.Article;
+import com.example.domain.Comment;
 import com.example.form.ArticleInsertForm;
 import com.example.form.CommentInsertForm;
 import com.example.repository.ArticleRepository;
+import com.example.repository.CommentRepository;
 
 /**
  * 記事関連の制御をするコントローラークラス.
@@ -26,7 +29,10 @@ import com.example.repository.ArticleRepository;
 public class ArticleController {
 
 	@Autowired
-	private ArticleRepository repository;
+	private ArticleRepository articleRepository;
+
+	@Autowired
+	private CommentRepository commentRepository;
 
 	@ModelAttribute
 	public ArticleInsertForm setUpArticleInsertForm() {
@@ -47,11 +53,54 @@ public class ArticleController {
 	@RequestMapping("")
 	public String index(Model model) {
 
-		List<Article> articleList = repository.findAll();
-		System.out.println(articleList);
+		List<Article> articleList = articleRepository.findAll();
 
 		model.addAttribute("articleList", articleList);
 
 		return "board";
+	}
+
+	/**
+	 * 記事を投稿し、記事一覧画面を表示する.
+	 *
+	 * @param articleInsertForm 記事を投稿する際に利用されるフォーム
+	 * @param model             リクエストスコープ
+	 * @return 記事一覧画面
+	 */
+	@RequestMapping("/insertArticle")
+	public String insertArticle(ArticleInsertForm articleInsertForm) {
+		Article article = new Article();
+		BeanUtils.copyProperties(articleInsertForm, article);
+		articleRepository.insert(article);
+
+		return "redirect:/article";
+	}
+
+	/**
+	 * コメントを投稿し.記事一覧画面を表示する.
+	 *
+	 * @param commentInsertForm コメントを投稿する際に利用されるフォーム
+	 * @return 記事一覧画面
+	 */
+	@RequestMapping("/insertComment")
+	public String insertComment(CommentInsertForm commentInsertForm) {
+		Comment comment = new Comment();
+		BeanUtils.copyProperties(commentInsertForm, comment);
+		commentRepository.insert(comment);
+
+		return "redirect:/article";
+	}
+
+	/**
+	 * 記事を削除し、記事一覧画面を表示する.
+	 *
+	 * @param id 削除したい記事のID
+	 * @return 記事一覧画面
+	 */
+	@RequestMapping("/deleteArticle")
+	public String deleteArticle(int id) {
+		System.out.println(id);
+		articleRepository.deleteById(id);
+		return "redirect:/article";
 	}
 }

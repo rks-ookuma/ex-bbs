@@ -12,6 +12,16 @@ public class CommentInsertForm {
 	private String name;
 	/** コメント内容 */
 	private String content;
+	/** コメントした記事のID */
+	private Integer articleId;
+
+	public Integer getArticleId() {
+		return articleId;
+	}
+
+	public void setArticleId(Integer articleId) {
+		this.articleId = articleId;
+	}
 
 	public String getName() {
 		return name;
@@ -31,7 +41,7 @@ public class CommentInsertForm {
 
 	@Override
 	public String toString() {
-		return "CommentInsertForm [name=" + name + ", content=" + content + "]";
+		return "CommentInsertForm [name=" + name + ", content=" + content + ", articleId=" + articleId + "]";
 	}
 
 }

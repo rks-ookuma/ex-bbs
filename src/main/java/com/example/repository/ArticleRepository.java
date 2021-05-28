@@ -5,7 +5,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.example.domain.Article;
@@ -79,6 +82,28 @@ public class ArticleRepository {
 		List<Article> articleList = template.query(sql, ARTICLE_ROW_MAPPER);
 		return articleList;
 
+	}
+
+	/**
+	 * 記事を新規登録する.
+	 *
+	 * @param article 新たに登録したい記事ドメイン
+	 */
+	public void insert(Article article) {
+		SqlParameterSource param = new BeanPropertySqlParameterSource(article);
+		String sql = "INSERT INTO " + TABLE_ARTICLES + " (name,content) VALUES (:name, :content);";
+		template.update(sql, param);
+	}
+
+	/**
+	 * 指定したIDの記事をDBから削除する. その記事についたコメントもDBのコメントテーブルから削除される。
+	 *
+	 * @param id 削除したい記事のID
+	 */
+	public void deleteById(int id) {
+		String sql = "DELETE FROM " + TABLE_ARTICLES + " WHERE id=:id;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		template.update(sql, param);
 	}
 
 }

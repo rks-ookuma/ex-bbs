@@ -11,7 +11,7 @@
     <label for="nameField"><span>投稿者名：</span>
     <input type="text" name="name" id="nameField" th:field="*{name}"></label><br>
     <label for="contentField"><span>投稿内容：</span>
-    <textarea name="content" id="contenField" cols="30" rows="10"></textarea><br>
+    <textarea name="content" id="contenField" cols="30" rows="10" th:field="*{content}"></textarea><br>
     </label>
     <button>記事投稿</button>
     </form>
@@ -25,7 +25,7 @@
         </pre>
 
         <div>
-            <a href="board.html" th:action="@{/article/deleteArticle}+'?id='+${article.id}">記事削除</a>
+            <a href="board.html" th:href="@{/article/deleteArticle}+'?id='+${article.id}">記事削除</a>
         </div>
         
         <div th:each="comment : ${article.commentList}" th:if="${comment}" style="color: green;">
@@ -37,6 +37,7 @@
         </div>
 
         <form action="board.html" th:action="@{/article/insertComment}" th:object="${commentInsertForm}">
+            <input type="hidden" name="articleId" th:value="${article.id}">
             <label for="commentNameField">名前：</label><br>
             <input type="text" name="name" id="commentNameField" th:field="*{name}"><br>
             <label for="commentContentField">コメント：</label><br>
