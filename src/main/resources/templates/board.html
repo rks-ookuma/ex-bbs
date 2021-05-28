@@ -7,10 +7,11 @@
 <body>
 
     <form action="board.html" th:action="@{/article/insertArticle}" th:object="${articleInsertForm}" method="POST">
-    
+    <div th:errors="*{name}" style="color: red;">エラー！</div>
     <label for="nameField"><span>投稿者名：</span>
     <input type="text" name="name" id="nameField" th:field="*{name}"></label><br>
-    <label for="contentField"><span>投稿内容：</span>
+    <div th:errors="*{content}" style="color: red;">エラー！</div>
+    <label for="contentField"><span>投稿内容：</span><br>
     <textarea name="content" id="contenField" cols="30" rows="10" th:field="*{content}"></textarea><br>
     </label>
     <button>記事投稿</button>
@@ -38,7 +39,9 @@
 
         <form action="board.html" th:action="@{/article/insertComment}" th:object="${commentInsertForm}">
             <input type="hidden" name="articleId" th:value="${article.id}">
+            <div th:if="${article.id==commentInsertForm.articleId}" th:errors="*{name}" style="color: red;">エラー！</div>
             <label for="commentNameField">名前：</label><br>
+            <div th:if="${article.id==commentInsertForm.articleId}" th:errors="*{content}" style="color: red">エラー！</div>
             <input type="text" name="name" id="commentNameField" th:field="*{name}"><br>
             <label for="commentContentField">コメント：</label><br>
             <textarea name="content" id="commentContentField" cols="30" rows="10"></textarea><br>

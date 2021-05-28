@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -64,11 +66,15 @@ public class ArticleController {
 	 * 記事を投稿し、記事一覧画面を表示する.
 	 *
 	 * @param articleInsertForm 記事を投稿する際に利用されるフォーム
+	 * @param result            入力値チェックのエラー群
 	 * @param model             リクエストスコープ
 	 * @return 記事一覧画面
 	 */
 	@RequestMapping("/insertArticle")
-	public String insertArticle(ArticleInsertForm articleInsertForm) {
+	public String insertArticle(@Validated ArticleInsertForm articleInsertForm, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			return index(model);
+		}
 		Article article = new Article();
 		BeanUtils.copyProperties(articleInsertForm, article);
 		articleRepository.insert(article);
@@ -80,10 +86,14 @@ public class ArticleController {
 	 * コメントを投稿し.記事一覧画面を表示する.
 	 *
 	 * @param commentInsertForm コメントを投稿する際に利用されるフォーム
+	 * @param result            入力値チェックのエラー群
 	 * @return 記事一覧画面
 	 */
 	@RequestMapping("/insertComment")
-	public String insertComment(CommentInsertForm commentInsertForm) {
+	public String insertComment(@Validated CommentInsertForm commentInsertForm, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			return index(model);
+		}
 		Comment comment = new Comment();
 		BeanUtils.copyProperties(commentInsertForm, comment);
 		commentRepository.insert(comment);
