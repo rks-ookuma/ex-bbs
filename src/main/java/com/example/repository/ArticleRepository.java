@@ -101,9 +101,16 @@ public class ArticleRepository {
 	 * @param id 削除したい記事のID
 	 */
 	public void deleteById(int id) {
-		String sql = "DELETE FROM " + TABLE_ARTICLES + " WHERE id=:id;";
+//		String sql = "DELETE FROM " + TABLE_ARTICLES + " WHERE id=:id;";
+//		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+//		template.update(sql, param);
+
+		// 案②：WITHとRETURNINGを使った外部制約付きの一括削除 ⇒CREATE文をいじれなかったとき
+		String sql = "WITH deleted_articles AS (DELETE FROM " + TABLE_ARTICLES + " WHERE id=:id RETURNING id )"
+				+ " DELETE FROM " + TABLE_COMMENTS + " WHERE article_id IN (SELECT id FROM deleted_articles);";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		template.update(sql, param);
+
 	}
 
 }
