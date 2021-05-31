@@ -37,7 +37,7 @@
             </pre>
         </div>
 
-        <form action="board.html" th:action="@{/article/insertComment}" th:object="${commentInsertForm}">
+        <form action="board.html" th:action="@{/article/insertComment}" th:object="${commentInsertForm}" method="POST">
             
             <input type="hidden" name="articleId" th:value="${article.id}">
 
